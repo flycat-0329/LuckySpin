@@ -83,16 +83,43 @@ void makeBoard() {
 		}
 	}
 
-	for (TokenNode* t = headNode->rlink; t != headNode; ) {
-		int row = rand() % 5;
-		int col = rand() % 5;
+	int tokenCount = countToken(headNode);
+	printf("\033[15;1H%d", tokenCount);
 
-		if (gameBoard[row][col]->id == 99) {
-			gameBoard[row][col] = t->token;
-			t = t->rlink;
+	if (tokenCount <= 25) {
+		for (TokenNode* t = headNode->rlink; t != headNode; ) {
+			int row = rand() % 5;
+			int col = rand() % 5;
+
+			if (gameBoard[row][col]->id == 99) {
+				gameBoard[row][col] = t->token;
+				t = t->rlink;
+			}
 		}
 	}
+	else {
+		Token** nodes = malloc(sizeof(Token*) * tokenCount);
+		TokenNode* current = headNode->rlink;
+		for (int i = 0; i < tokenCount && current; i++) {
+			nodes[i] = current->token;
+			current = current->rlink;
+		}
 
+		for (int i = tokenCount - 1; i > 0; i--) {
+			int j = rand() % (i + 1);
+			Token* temp = nodes[i];
+			nodes[i] = nodes[j];
+			nodes[j] = temp;
+		}
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				gameBoard[i][j] = nodes[i * 5 + j];
+			}
+		}
+
+		free(nodes);
+	}
 	return NULL;
 }
 
@@ -129,6 +156,32 @@ int main() {
 	srand(time(NULL));
 
 	tokenListInit(headNode);
+
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 2);
 
 	while (1) {
 		system("cls");
@@ -167,9 +220,8 @@ int main() {
 		}
 		case 2: {
 			system("cls");
-			printTokenList(headNode);
-
 			printf("\033[1;1H돈: %d\n\n", player.money);
+			printTokenList(headNode);
 			printf("토큰들의 정보를 보려면 1번을, 뒤로 가려면 2번을 눌려주세요.");
 			int temp = 0;
 			scanf("%d", &temp);
@@ -184,12 +236,16 @@ int main() {
 			break;
 		}
 		case 3: {
+			system("cls");
 			printf("\033[1;1H돈: %d\n\n", player.money);
 			printf("이 게임은 룰렛을 돌려 보유한 토큰을 보드 위에 배치한 뒤에 그 결과를 통해 돈을 얻는 것이 목적인 게임입니다.\n");
 			printf("토큰은 게임 내에서 다양한 방식으로 얻을 수 있습니다.\n");
 			printf("..."); 
 			_getch();
 			break;
+		}
+		case 4: {
+			exit(0);
 		}
 		default:
 			break;

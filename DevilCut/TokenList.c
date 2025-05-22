@@ -112,7 +112,7 @@ TokenNode* searchList(TokenNode* phead, int id) {
 
 int countToken(TokenNode* head) {
 	int count = 0;
-	for (TokenNode* temp = head->rlink; temp != head->llink; temp = temp->rlink) {
+	for (TokenNode* temp = head; temp != head->llink; temp = temp->rlink) {
 		count++;
 	}
 
