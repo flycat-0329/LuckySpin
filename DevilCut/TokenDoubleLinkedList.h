@@ -22,6 +22,7 @@ int createTokenGrade(int grade);
 
 void tokenListInit(TokenNode* phead);
 void printTokenList(TokenNode* phead);
+void printTokenInfo();
 TokenNode* searchList(TokenNode* phead, int id);
 int countToken(TokenNode* head);
 

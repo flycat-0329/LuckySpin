@@ -145,3 +145,20 @@ void deleteToken(TokenNode* head, int id) {
 	free(removed->token);
 	free(removed);
 }
+
+void printTokenInfo() {
+	FILE* tokenDataFile = fopen("TokenData.txt", "r");
+	char line[1024];
+
+	if (tokenDataFile == NULL) {
+		return NULL;
+	}
+
+	fgets(line, sizeof(line), tokenDataFile);
+	while (fgets(line, sizeof(line), tokenDataFile)) {
+		printf(line);
+		printf("\n");
+	}
+
+	fclose(tokenDataFile);
+}

@@ -3,22 +3,24 @@
 #include <malloc.h>
 #include <time.h>
 #include <conio.h> 
+#include <math.h>
 #include <windows.h>
 #include "TokenDoubleLinkedList.h"
-#include "Player.h"
 
 Token* blankToken;
 Token* gameBoard[5][5];
-Player player;
+int money = 0;
 
 int calcToken() {
 	int tokenMoney = 0;
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
-			printf("%d ", gameBoard[i][j]->id);
-
 			tokenMoney += getTokenValue(gameBoard[i][j]->id);
-			
+		}
+	}
+
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
 			switch (gameBoard[i][j]->id)
 			{
 			case 5:
@@ -84,7 +86,6 @@ void makeBoard() {
 	}
 
 	int tokenCount = countToken(headNode);
-	printf("\033[15;1H%d", tokenCount);
 
 	if (tokenCount <= 25) {
 		for (TokenNode* t = headNode->rlink; t != headNode; ) {
@@ -124,14 +125,13 @@ void makeBoard() {
 }
 
 void printBoard() {
-	printf("\033[1;1H돈: %d\n\n", player.money);
+	printf("\033[1;1H돈: %d\n\n", money);
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			printf("\033[0;3%dm %10s \033[0m", gameBoard[i][j]->grade + 1, gameBoard[i][j]->name);
 		}
 		printf("\n");
 	}
-	printf("\n");
 }
 
 int selectToken() {
@@ -153,39 +153,22 @@ int selectToken() {
 
 int main() {
 	headNode = (TokenNode*)malloc(sizeof(TokenNode));
-	srand(time(NULL));
+	int turnCount = 0;
+	double firstTax = 25.0;
+	double growRate = 0.6;
 
+	srand(time(NULL));
 	tokenListInit(headNode);
 
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
-	insertLastToken(headNode, 2);
+	insertLastToken(headNode, 0);
+	insertLastToken(headNode, 0);
+	insertLastToken(headNode, 0);
+	insertLastToken(headNode, 0);
+	insertLastToken(headNode, 5);
 
 	while (1) {
 		system("cls");
-		printf("\033[1;1H돈: %d\n\n", player.money);
+		printf("\033[1;1H돈: %d\n%d턴 후에 %.0f원 납부 예정\n\n", money, 6 - (turnCount % 6), firstTax * pow(1.0 + growRate, turnCount / 6));
 		printf("1. 게임 진행\n2. 내 토큰 보기\n3. 게임 설명\n4. 종료\n\n");
 		int playerSelect = 0;
 		scanf("%d", &playerSelect);
@@ -199,8 +182,8 @@ int main() {
 			makeBoard();
 			printBoard();
 			int turnMoney = calcToken();
-			printf("%d원\n\n", turnMoney);
-			player.money += turnMoney;
+			printf("%d원을 벌었다!\n\n", turnMoney);
+			money += turnMoney;
 
 			selectTokenList[0] = createToken(selectToken());
 			selectTokenList[1] = createToken(selectToken());
@@ -216,18 +199,38 @@ int main() {
 					free(selectTokenList[i]);
 				}
 			}
+
+			turnCount++;
+
+			if (turnCount % 6 == 0) {
+				system("cls");
+				printf("\033[1;1H돈: %d\n\n", money);
+				printf("아니 뭐 벌써 세금을 떼가!\n\n");
+				_getch();
+				if (money > (firstTax * pow(1 + growRate, (turnCount - 1) / 6))) {
+					printf("휴 다행이다.. 이번엔 어떻게든 넘어갔어..");
+					money -= firstTax * pow(1 + growRate, (turnCount - 1) / 6);
+					_getch();
+				}
+				else {
+					printf("아니 하루만! 진짜 딱 하루만 더 시간을.. 안 돼! 죽기 싫어!! 으아아악!!");
+					_getch();
+					exit(0);
+				}
+			}
 			break;
 		}
 		case 2: {
 			system("cls");
-			printf("\033[1;1H돈: %d\n\n", player.money);
+			printf("\033[1;1H돈: %d\n\n", money);
 			printTokenList(headNode);
 			printf("토큰들의 정보를 보려면 1번을, 뒤로 가려면 2번을 눌려주세요.");
 			int temp = 0;
 			scanf("%d", &temp);
 			switch (temp) {
 			case 1:
-				printf("아직 안 만들었슈");
+				system("cls");
+				printTokenInfo();
 				_getch();
 				break;
 			default:
@@ -237,7 +240,7 @@ int main() {
 		}
 		case 3: {
 			system("cls");
-			printf("\033[1;1H돈: %d\n\n", player.money);
+			printf("\033[1;1H돈: %d\n\n", money);
 			printf("이 게임은 룰렛을 돌려 보유한 토큰을 보드 위에 배치한 뒤에 그 결과를 통해 돈을 얻는 것이 목적인 게임입니다.\n");
 			printf("토큰은 게임 내에서 다양한 방식으로 얻을 수 있습니다.\n");
 			printf("..."); 
