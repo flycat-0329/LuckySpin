@@ -7,6 +7,8 @@
 #include <windows.h>
 #include "TokenDoubleLinkedList.h"
 
+#define TAX_TURN 5
+
 Token* blankToken;
 Token* gameBoard[5][5];
 int money = 0;
@@ -26,43 +28,43 @@ int calcToken() {
 			case 5:
 				if (i > 0) {
 					if (gameBoard[i - 1][j]->id == 3) {
-						tokenMoney += 10;
+						tokenMoney += 7;
 						deleteToken(headNode, 3);
 					}
 					if (gameBoard[i - 1][j]->id == 4) {
-						tokenMoney += 15;
+						tokenMoney += 10;
 						deleteToken(headNode, 4);
 					}
 				}
 
 				if (i < 4) {
 					if (gameBoard[i + 1][j]->id == 3) {
-						tokenMoney += 10;
+						tokenMoney += 7;
 						deleteToken(headNode, 3);
 					}
 					if (gameBoard[i + 1][j]->id == 4) {
-						tokenMoney += 15;
+						tokenMoney += 10;
 						deleteToken(headNode, 4);
 					}
 				}
 
 				if (j > 0) {
 					if (gameBoard[i][j - 1]->id == 3) {
-						tokenMoney += 10;
+						tokenMoney += 7;
 						deleteToken(headNode, 3);
 					}
 					if (gameBoard[i][j - 1]->id == 4) {
-						tokenMoney += 15;
+						tokenMoney += 10;
 						deleteToken(headNode, 4);
 					}
 				}
 				if (j < 4) {
 					if (gameBoard[i][j + 1]->id == 3) {
-						tokenMoney += 10;
+						tokenMoney += 7;
 						deleteToken(headNode, 3);
 					}
 					if (gameBoard[i][j + 1]->id == 4) {
-						tokenMoney += 15;
+						tokenMoney += 10;
 						deleteToken(headNode, 4);
 					}
 				}
@@ -137,13 +139,13 @@ void printBoard() {
 int selectToken() {
 	int trigger = rand() % 10000;
 
-	if (trigger >= 0 && trigger < 7000) {		//레어도 0
+	if (trigger >= 0 && trigger < 8000) {		//레어도 0
 		createTokenGrade(0);
 	}
-	else if (trigger >= 7000 && trigger < 9000) {		//레어도 1
+	else if (trigger >= 8000 && trigger < 9500) {		//레어도 1
 		createTokenGrade(1);
 	}
-	else if (trigger >= 9000 && trigger < 9900) {		//레어도 2
+	else if (trigger >= 9500 && trigger < 9900) {		//레어도 2
 		createTokenGrade(2);
 	}
 	else {		//레어도 3
@@ -168,7 +170,7 @@ int main() {
 
 	while (1) {
 		system("cls");
-		printf("\033[1;1H돈: %d\n%d턴 후에 %.0f원 납부 예정\n\n", money, 6 - (turnCount % 6), firstTax * pow(1.0 + growRate, turnCount / 6));
+		printf("\033[1;1H돈: %d\n%d턴 후에 %.0f원 납부 예정\n\n", money, TAX_TURN - (turnCount % TAX_TURN), firstTax * pow(1.0 + growRate, turnCount / TAX_TURN));
 		printf("1. 게임 진행\n2. 내 토큰 보기\n3. 게임 설명\n4. 종료\n\n");
 		int playerSelect = 0;
 		while (1) {
@@ -219,14 +221,14 @@ int main() {
 
 			turnCount++;
 
-			if (turnCount % 6 == 0) {
+			if (turnCount % TAX_TURN == 0) {
 				system("cls");
 				printf("\033[1;1H돈: %d\n\n", money);
 				printf("아니 뭐 벌써 세금을 떼가!\n\n");
 				_getch();
-				if (money > (firstTax * pow(1 + growRate, (turnCount - 1) / 6))) {
+				if (money > (firstTax * pow(1 + growRate, (turnCount - 1) / TAX_TURN))) {
 					printf("휴 다행이다.. 이번엔 어떻게든 넘어갔어..");
-					money -= firstTax * pow(1 + growRate, (turnCount - 1) / 6);
+					money -= firstTax * pow(1 + growRate, (turnCount - 1) / TAX_TURN);
 					_getch();
 				}
 				else {
