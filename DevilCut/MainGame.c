@@ -171,13 +171,22 @@ int main() {
 		printf("\033[1;1H돈: %d\n%d턴 후에 %.0f원 납부 예정\n\n", money, 6 - (turnCount % 6), firstTax * pow(1.0 + growRate, turnCount / 6));
 		printf("1. 게임 진행\n2. 내 토큰 보기\n3. 게임 설명\n4. 종료\n\n");
 		int playerSelect = 0;
-		scanf("%d", &playerSelect);
+		while (1) {
+			int a = scanf("%d", &playerSelect);
+			if (a == 1) {
+				break;
+			}
+			else {
+				int ch;
+				while ((ch = getchar()) != '\n' && ch != EOF);
+			}
+		}
 
 		switch (playerSelect) {
 		case 1: {
 			system("cls");
 			Token* selectTokenList[3];
-			int select = 0;
+			int tokenSelect = 0;
 
 			makeBoard();
 			printBoard();
@@ -190,11 +199,19 @@ int main() {
 			selectTokenList[2] = createToken(selectToken());
 			printf("토큰을 하나 선택해주세요. 선택하고 싶지 않다면 0을 입력해주세요.\n");
 			printf("1. %s  2. %s  3. %s\n\n", &selectTokenList[0]->name, &selectTokenList[1]->name, &selectTokenList[2]->name);
+			
+			while (1) {
+				if (scanf("%d", &tokenSelect) == 1) {
+					break;
+				}
+				else {
+					int ch;
+					while ((ch = getchar()) != '\n' && ch != EOF);
+				}
+			}
 
-			scanf("%d", &select);
-
-			if (select != 0) {
-				insertLastToken(headNode, selectTokenList[select - 1]->id);
+			if (tokenSelect != 0) {
+				insertLastToken(headNode, selectTokenList[tokenSelect - 1]->id);
 				for (int i = 0; i < 3; i++) {
 					free(selectTokenList[i]);
 				}
@@ -226,7 +243,16 @@ int main() {
 			printTokenList(headNode);
 			printf("토큰들의 정보를 보려면 1번을, 뒤로 가려면 2번을 눌려주세요.");
 			int temp = 0;
-			scanf("%d", &temp);
+			while (1) {
+				if (scanf("%d", &temp) == 1) {
+					break;
+				}
+				else {
+					int ch;
+					while ((ch = getchar()) != '\n' && ch != EOF);
+				}
+			}
+
 			switch (temp) {
 			case 1:
 				system("cls");
