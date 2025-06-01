@@ -170,7 +170,7 @@ int main() {
 
 	while (1) {
 		system("cls");
-		printf("\033[1;1H돈: %d\n%d턴 후에 %.0f원 납부 예정\n\n", money, TAX_TURN - (turnCount % TAX_TURN), firstTax * pow(1.0 + growRate, turnCount / TAX_TURN));
+		printf("\033[1;1H돈: %d\n%d턴 후에 %.0f원 납부 예정\n현재 %d턴\n\n", money, TAX_TURN - (turnCount % TAX_TURN), firstTax * pow(1.0 + growRate, turnCount / TAX_TURN), turnCount);
 		printf("1. 게임 진행\n2. 내 토큰 보기\n3. 게임 설명\n4. 종료\n\n");
 		int playerSelect = 0;
 		while (1) {
@@ -233,6 +233,8 @@ int main() {
 				}
 				else {
 					printf("아니 하루만! 진짜 딱 하루만 더 시간을.. 안 돼! 죽기 싫어!! 으아아악!!");
+					printf("\nGame Over");
+					printf("\n총 %d 턴을 버텼다!", turnCount);
 					_getch();
 					exit(0);
 				}
