@@ -101,7 +101,7 @@ void printTokenList(TokenNode* phead) {
 
 TokenNode* searchList(TokenNode* phead, int id) {
 	TokenNode* t;
-	for (t = phead->rlink; t != phead->llink; t = t->rlink) {
+	for (t = phead->rlink; t != phead; t = t->rlink) {
 		if (t->token->id == id) {
 			return t;
 		}

@@ -14,10 +14,11 @@ Token* gameBoard[5][5];
 int money = 0;
 
 int calcToken() {
+	blankToken = createToken(99);
 	int tokenMoney = 0;
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
-			tokenMoney += getTokenValue(gameBoard[i][j]->id);
+ 			tokenMoney += getTokenValue(gameBoard[i][j]->id);
 		}
 	}
 
@@ -58,6 +59,7 @@ int calcToken() {
 						deleteToken(headNode, 4);
 					}
 				}
+
 				if (j < 4) {
 					if (gameBoard[i][j + 1]->id == 3) {
 						tokenMoney += 7;
@@ -142,10 +144,10 @@ int selectToken() {
 	if (trigger >= 0 && trigger < 8000) {		//레어도 0
 		createTokenGrade(0);
 	}
-	else if (trigger >= 8000 && trigger < 9500) {		//레어도 1
+	else if (trigger >= 8000 && trigger < 9000) {		//레어도 1
 		createTokenGrade(1);
 	}
-	else if (trigger >= 9500 && trigger < 9900) {		//레어도 2
+	else if (trigger >= 9000 && trigger < 9900) {		//레어도 2
 		createTokenGrade(2);
 	}
 	else {		//레어도 3
@@ -161,12 +163,6 @@ int main() {
 
 	srand(time(NULL));
 	tokenListInit(headNode);
-
-	insertLastToken(headNode, 0);
-	insertLastToken(headNode, 0);
-	insertLastToken(headNode, 0);
-	insertLastToken(headNode, 0);
-	insertLastToken(headNode, 5);
 
 	while (1) {
 		system("cls");
