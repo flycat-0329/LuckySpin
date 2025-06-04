@@ -83,6 +83,7 @@ int calcToken() {
 void makeBoard() {
 	free(blankToken);
 	blankToken = createToken(99);
+	int row, col;
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			gameBoard[i][j] = blankToken;
@@ -93,12 +94,19 @@ void makeBoard() {
 
 	if (tokenCount <= 25) {
 		for (TokenNode* t = headNode->rlink; t != headNode; ) {
-			int row = rand() % 5;
-			int col = rand() % 5;
+			row = rand() % 5;
+			col = rand() % 5;
 
-			if (gameBoard[row][col]->id == 99) {
-				gameBoard[row][col] = t->token;
-				t = t->rlink;
+			while (1) {
+				if (gameBoard[row][col]->id == 99) {
+					gameBoard[row][col] = t->token;
+					t = t->rlink;
+					break;
+				}
+				else {
+					row = rand() % 5;
+					col = rand() % 5;
+				}
 			}
 		}
 	}
