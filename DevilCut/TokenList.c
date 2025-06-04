@@ -91,6 +91,11 @@ void tokenListInit(TokenNode* phead) {
 }
 
 void printTokenList(TokenNode* phead) {
+	if (phead != NULL) {
+		printf("토큰이 없습니다.\n\n");
+		return;
+	}
+
 	TokenNode* t;
 	for (t = phead->rlink; t != phead->llink; t = t->rlink) {
 		printf("%s, ", t->token->name);
@@ -156,8 +161,23 @@ void printTokenInfo() {
 
 	fgets(line, sizeof(line), tokenDataFile);
 	while (fgets(line, sizeof(line), tokenDataFile)) {
-		printf(line);
-		printf("\n");
+		atoi(strtok(line, ","));
+		printf("이름: %s\n", strtok(NULL, ","));
+		int g = atoi(strtok(NULL, ","));
+		printf("획득 골드: %d\n", g);
+		int t = atoi(strtok(NULL, ","));
+		if (t == 0) {
+			printf("등급: 노말\n");
+		}
+		else if (t == 1) {
+			printf("등급: 희귀\n");
+		}
+		else if (t == 2) {
+			printf("등급: 에픽\n");
+		}
+		printf("설명: %s\n", strtok(NULL, ","));
+		printf("카테고리: %s\n", strtok(NULL, ",\n"));
+		printf("\n\n");
 	}
 
 	fclose(tokenDataFile);
